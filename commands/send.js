@@ -2,7 +2,6 @@ export default {
   run: async (interaction) => {
     interaction.reply({
       content: `${interaction.options.getString("emoji")}`,
-      ephemeral: true,
     });
   },
 
@@ -12,7 +11,9 @@ export default {
     );
 
     const focusedValue = interaction.options.getFocused();
-    const emojis = items.slice(0, 25).filter((e) => e.name.startsWith(focusedValue));
+    const emojis = items
+      .slice(0, 25)
+      .filter((e) => e.name.startsWith(focusedValue));
 
     await interaction.respond(
       emojis.map((e) => ({
