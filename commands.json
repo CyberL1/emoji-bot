@@ -1,0 +1,22 @@
+[
+  {
+    "name": "send",
+    "description": "Send a custom emoji without nitro",
+    "options": [
+      {
+        "type": 3,
+        "name": "emoji",
+        "description": "The emoji to send",
+        "required": true
+      }
+    ],
+    "integration_types": [
+      1
+    ],
+    "contexts": [
+      0,
+      1,
+      2
+    ]
+  }
+]
