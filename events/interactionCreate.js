@@ -4,7 +4,11 @@ export default {
     const cmd = interaction.client.commands.get(command);
 
     if (cmd) {
-      cmd.run(interaction);
+      if (interaction.isChatInputCommand()) {
+        cmd.run(interaction);
+      } else if (interaction.isAutocomplete()) {
+        cmd.autocomplete(interaction);
+      }
     }
   },
 };
