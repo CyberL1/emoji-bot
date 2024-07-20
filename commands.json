@@ -19,5 +19,26 @@
       1,
       2
     ]
+  },
+  {
+    "name": "info",
+    "description": "Get info on an emoji",
+    "options": [
+      {
+        "type": 3,
+        "name": "emoji",
+        "description": "The emoji to check",
+        "required": true,
+        "autocomplete": true
+      }
+    ],
+    "integration_types": [
+      1
+    ],
+    "contexts": [
+      0,
+      1,
+      2
+    ]
   }
 ]
