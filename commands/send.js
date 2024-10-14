@@ -1,8 +1,16 @@
+import { messageLink } from "discord.js";
+
 export default {
   run: async (interaction) => {
-    interaction.reply({
-      content: `${interaction.options.getString("emoji")}`,
-    });
+    let content = interaction.options.getString("emoji");
+    const replyTo = interaction.options.getString("reply-to");
+
+    if (replyTo) {
+      const replyToLink = replyTo.startsWith("https://") ? replyTo : messageLink(interaction.channelId, replyTo);
+      content += `\n-# Replied to: ${replyToLink}`
+    }
+
+    interaction.reply({ content });
   },
 
   autocomplete: async (interaction) => {
