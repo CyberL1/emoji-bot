@@ -45,5 +45,17 @@
       1,
       2
     ]
+  },
+  {
+    "name": "reply-to",
+    "type": 3,
+    "integration_types": [
+      1
+    ],
+    "contexts": [
+      0,
+      1,
+      2
+    ]
   }
 ]

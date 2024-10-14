@@ -1,8 +1,8 @@
-export default async (
+export default (
   interaction,
   options = { id: "", name: "", filter: "" },
 ) => {
-  const emojiCache = await interaction.client.application.emojis.cache;
+  const emojiCache = interaction.client.application.emojis.cache;
 
   if (options.filter) {
     const emojis = emojiCache.filter((e) => e.name.startsWith(options.filter));

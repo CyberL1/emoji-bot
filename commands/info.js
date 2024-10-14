@@ -37,7 +37,7 @@ export default {
 
   autocomplete: async (interaction) => {
     const focusedValue = interaction.options.getFocused();
-    const emojis = await findEmoji(interaction, { filter: focusedValue });
+    const emojis = findEmoji(interaction, { filter: focusedValue });
 
     await interaction.respond(
       emojis.slice(0, 25).map((e) => ({
