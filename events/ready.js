@@ -26,6 +26,6 @@ export default {
       }
 
       console.log(`Total emojis: ${client.application.emojis.cache.size}`);
-    }, 6000);
+    }, 60000);
   },
 };
