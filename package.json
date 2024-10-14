@@ -8,10 +8,10 @@
   "description": "",
   "type": "module",
   "dependencies": {
-    "discord.js": "^14.15.3",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3"
+    "@biomejs/biome": "^1.9.3"
   }
 }

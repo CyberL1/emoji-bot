@@ -1,9 +1,9 @@
+import findEmoji from "../utils/findEmoji.js";
+
 export default {
   run: async (interaction) => {
     const emojiId = interaction.options.getString("emoji");
-    const emoji = await interaction.client.rest.get(
-      `/applications/${process.env.CLIENT_ID}/emojis/${emojiId}`,
-    );
+    const emoji = await findEmoji(interaction, { id: emojiId });
 
     const embed = {
       title: "Emoji info",
@@ -36,17 +36,11 @@ export default {
   },
 
   autocomplete: async (interaction) => {
-    const { items } = await interaction.client.rest.get(
-      `/applications/${process.env.CLIENT_ID}/emojis`,
-    );
-
     const focusedValue = interaction.options.getFocused();
-    const emojis = items
-      .filter((e) => e.name.startsWith(focusedValue))
-      .slice(0, 25);
+    const emojis = await findEmoji(interaction, { filter: focusedValue });
 
     await interaction.respond(
-      emojis.map((e) => ({
+      emojis.slice(0, 25).map((e) => ({
         name: e.name,
         value: e.id,
       })),
