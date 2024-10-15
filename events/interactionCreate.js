@@ -4,7 +4,10 @@ export default {
     const cmd = interaction.client.commands.get(command);
 
     if (cmd) {
-      if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
+      if (
+        interaction.isChatInputCommand() ||
+        interaction.isContextMenuCommand()
+      ) {
         cmd.run(interaction);
       } else if (interaction.isAutocomplete()) {
         cmd.autocomplete(interaction);

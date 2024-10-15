@@ -9,7 +9,7 @@ export default {
     console.log(`${client.user.username} ready`);
 
     setInterval(async () => {
-      console.log("Fetching application emojis after 60 seconds");
+      console.log("Fetching application emojis after 20 seconds");
       const oldCacheSize = client.application.emojis.cache.size;
       const newEmojis = await client.application.emojis.fetch();
 
