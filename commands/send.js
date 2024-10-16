@@ -1,4 +1,10 @@
-import { messageLink } from "discord.js";
+import {
+  ActionRowBuilder,
+  messageLink,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+} from "discord.js";
 import findEmoji from "../utils/findEmoji.js";
 import replaceEmoji from "../utils/replaceEmoji.js";
 
@@ -8,10 +14,20 @@ export default {
     const message = interaction.options.getString("message");
 
     if (!emoji && !message) {
-      return interaction.reply({
-        content: "No `emoji` or `message` present",
-        ephemeral: true,
-      });
+      const textComponent = new TextInputBuilder()
+        .setCustomId("content")
+        .setLabel("Message content")
+        .setStyle(TextInputStyle.Paragraph)
+        .setMaxLength(2000);
+
+      const actionRow = new ActionRowBuilder().addComponents(textComponent);
+
+      const modal = new ModalBuilder()
+        .setCustomId("send")
+        .setTitle("Send a message")
+        .addComponents(actionRow);
+
+      return await interaction.showModal(modal);
     }
 
     let content = "";
