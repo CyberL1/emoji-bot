@@ -1,9 +1,29 @@
 import { messageLink } from "discord.js";
 import findEmoji from "../utils/findEmoji.js";
+import replaceEmoji from "../utils/replaceEmoji.js";
 
 export default {
   run: async (interaction) => {
-    let content = interaction.options.getString("emoji");
+    const emoji = interaction.options.getString("emoji");
+    const message = interaction.options.getString("message");
+
+    if (!emoji && !message) {
+      return interaction.reply({
+        content: "No `emoji` or `message` present",
+        ephemeral: true,
+      });
+    }
+
+    let content = "";
+
+    if (message) {
+      content = replaceEmoji(interaction, message);
+    }
+
+    if (emoji) {
+      content += ` ${emoji}`;
+    }
+
     const replyTo = interaction.options.getString("reply-to");
 
     if (replyTo) {
