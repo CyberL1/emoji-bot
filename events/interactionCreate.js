@@ -16,6 +16,15 @@ export default {
       const modal = interaction.client.modals.get(interaction.customId);
 
       modal.run(interaction);
+    } else if (interaction.isButton()) {
+      if (interaction.customId.startsWith("page-")) {
+        const originalCommand = interaction.message.interaction.commandName;
+
+        const page = Number(interaction.customId.split("-")[1]);
+        const cmd = interaction.client.commands.get(originalCommand);
+
+        cmd.page(interaction, page);
+      }
     }
   },
 };
