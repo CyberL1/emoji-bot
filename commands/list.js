@@ -156,6 +156,7 @@ export default {
       }
     }
 
+    embed.setTitle(`Emojis - ${emojis.length}/2000`);
     embed.setFields(columns);
     embed.setFooter({ text: `Page: ${page}/${maxPages}` });
 
