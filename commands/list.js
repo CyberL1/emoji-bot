@@ -47,22 +47,28 @@ export default {
         `https://discord.com/developers/applications/${process.env.CLIENT_ID}/emojis`,
       );
 
-    const previousPage = new ButtonBuilder()
-      .setLabel("Previous page")
-      .setStyle(ButtonStyle.Secondary)
-      .setCustomId(`page-${page - 1}-${maxPages}`)
-      .setDisabled(true);
+    let components = [button];
 
-    const nextPage = new ButtonBuilder()
-      .setLabel("Next page")
-      .setStyle(ButtonStyle.Success)
-      .setCustomId(`page-${page + 1}-${maxPages}`);
+    // Show navigation buttons only if maxPages > 1
+    if (maxPages > 1) {
+      const previousPage = new ButtonBuilder()
+        .setLabel("Previous page")
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId(`page-${page - 1}-${maxPages}`)
+        .setDisabled(true);
 
-    const row = new ActionRowBuilder().addComponents(
-      previousPage,
-      button,
-      nextPage,
-    );
+      const nextPage = new ButtonBuilder()
+        .setLabel("Next page")
+        .setStyle(
+          page === maxPages ? ButtonStyle.Secondary : ButtonStyle.Success,
+        )
+        .setCustomId(`page-${page + 1}-${maxPages}`)
+        .setDisabled(page === maxPages);
+
+      components = [previousPage, button, nextPage];
+    }
+
+    const row = new ActionRowBuilder().addComponents(components);
 
     await interaction.reply({
       embeds: [embed],
