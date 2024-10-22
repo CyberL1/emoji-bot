@@ -3,10 +3,12 @@ export default {
   once: true,
   run: async (client) => {
     console.log("Fetching application emojis");
-    await client.application.emojis.fetch();
-    console.log(`Total emojis: ${client.application.emojis.cache.size}`);
+    const fetched = await client.application.emojis.fetch();
 
-    console.log(`${client.user.username} ready`);
+    if (fetched) {
+      console.log(`Total emojis: ${client.application.emojis.cache.size}`);
+      console.log(`${client.user.username} ready`);
+    }
 
     setInterval(async () => {
       console.log("Fetching application emojis after 20 seconds");
