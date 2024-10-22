@@ -59,11 +59,8 @@ export default {
 
       const nextPage = new ButtonBuilder()
         .setLabel("Next page")
-        .setStyle(
-          page === maxPages ? ButtonStyle.Secondary : ButtonStyle.Success,
-        )
-        .setCustomId(`page-${page + 1}-${maxPages}`)
-        .setDisabled(page === maxPages);
+        .setStyle(ButtonStyle.Success)
+        .setCustomId(`page-${page + 1}-${maxPages}`);
 
       components = [previousPage, button, nextPage];
     }
