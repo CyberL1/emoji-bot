@@ -6,8 +6,8 @@ import {
 } from "discord.js";
 import findEmoji from "../utils/findEmoji.js";
 
-const columnsPerPage = 2;
-const emojisPerColumn = 12;
+const columnsPerPage = 1;
+const emojisPerColumn = 25;
 
 export default {
   run: async (interaction) => {
@@ -20,25 +20,42 @@ export default {
     );
 
     for (let i = 0; i < columnsPerPage; i++) {
-      const value = emojis
-        .slice(emojisPerColumn * i, emojisPerColumn * (i + 1))
-        .map(
-          (e) =>
-            `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
-        )
-        .join("\n");
+      let value = "";
 
-      if (value.length === 0) {
-        continue;
+      for (const emoji of emojis.slice(
+        emojisPerColumn * i,
+        emojisPerColumn * (i + 1),
+      )) {
+        const emojiStr =
+          (emoji.animated
+            ? `<a:${emoji.name}:${emoji.id}>`
+            : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
+
+        const emojiLine = value + emojiStr + "\n";
+
+        if (emojiLine.length > 1024) {
+          const column = {
+            name: "‎",
+            value,
+            inline: true,
+          };
+
+          columns.push(column);
+          value = emojiStr + "\n";
+        } else {
+          value += emojiStr + "\n";
+        }
       }
 
-      const column = {
-        name: "‎",
-        value,
-        inline: true,
-      };
+      if (value.length > 0) {
+        const column = {
+          name: "‎",
+          value,
+          inline: true,
+        };
 
-      columns.push(column);
+        columns.push(column);
+      }
     }
 
     const embed = new EmbedBuilder()
@@ -101,28 +118,42 @@ export default {
     const columns = [];
 
     for (let i = 0; i < columnsPerPage; i++) {
-      const value = emojis
-        .slice(
-          (page - 1) * emojisPerColumn + i * emojisPerColumn,
-          (page - 1) * emojisPerColumn + (i + 1) * emojisPerColumn,
-        )
-        .map(
-          (e) =>
-            `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
-        )
-        .join("\n");
+      let value = "";
 
-      if (value.length === 0) {
-        continue;
+      for (const emoji of emojis.slice(
+        (page - 1) * emojisPerColumn + i * emojisPerColumn,
+        (page - 1) * emojisPerColumn + (i + 1) * emojisPerColumn,
+      )) {
+        const emojiStr =
+          (emoji.animated
+            ? `<a:${emoji.name}:${emoji.id}>`
+            : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
+
+        const emojiLine = value + emojiStr + "\n";
+
+        if (emojiLine.length > 1024) {
+          const column = {
+            name: "‎",
+            value,
+            inline: true,
+          };
+
+          columns.push(column);
+          value = emojiStr + "\n";
+        } else {
+          value += emojiStr + "\n";
+        }
       }
 
-      const column = {
-        name: "‎",
-        value,
-        inline: true,
-      };
+      if (value.length > 0) {
+        const column = {
+          name: "‎",
+          value,
+          inline: true,
+        };
 
-      columns.push(column);
+        columns.push(column);
+      }
     }
 
     embed.setFields(columns);
