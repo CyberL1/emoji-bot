@@ -20,15 +20,21 @@ export default {
     );
 
     for (let i = 0; i < columnsPerPage; i++) {
+      const value = emojis
+        .slice(emojisPerColumn * i, emojisPerColumn * (i + 1))
+        .map(
+          (e) =>
+            `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
+        )
+        .join("\n");
+
+      if (value.length === 0) {
+        continue;
+      }
+
       const column = {
         name: "‎",
-        value: emojis
-          .slice(emojisPerColumn * i, emojisPerColumn * (i + 1))
-          .map(
-            (e) =>
-              `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
-          )
-          .join("\n"),
+        value,
         inline: true,
       };
 
@@ -95,18 +101,24 @@ export default {
     const columns = [];
 
     for (let i = 0; i < columnsPerPage; i++) {
+      const value = emojis
+        .slice(
+          (page - 1) * emojisPerColumn + i * emojisPerColumn,
+          (page - 1) * emojisPerColumn + (i + 1) * emojisPerColumn,
+        )
+        .map(
+          (e) =>
+            `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
+        )
+        .join("\n");
+
+      if (value.length === 0) {
+        continue;
+      }
+
       const column = {
         name: "‎",
-        value: emojis
-          .slice(
-            (page - 1) * emojisPerColumn + i * emojisPerColumn,
-            (page - 1) * emojisPerColumn + (i + 1) * emojisPerColumn,
-          )
-          .map(
-            (e) =>
-              `${e.animated ? `<a:${e.name}:${e.id}>` : `<:${e.name}:${e.id}>`} \`:${e.name}:\``,
-          )
-          .join("\n"),
+        value,
         inline: true,
       };
 
