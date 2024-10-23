@@ -35,8 +35,6 @@ export default {
       .setDescription(list || ":x: No emojis")
       .setFooter({ text: `Page: ${page}/${maxPages}` });
 
-    let components = [];
-
     // Show navigation buttons only if maxPages > 1
     if (maxPages > 1) {
       const previousPage = new ButtonBuilder()
@@ -50,16 +48,16 @@ export default {
         .setStyle(ButtonStyle.Success)
         .setCustomId(`page-${page + 1}-${maxPages}`);
 
-      components = [previousPage, nextPage];
+      const row = new ActionRowBuilder().addComponents(previousPage, nextPage);
+
+      return await interaction.reply({
+        embeds: [embed],
+        components: [row],
+        ephemeral: true,
+      });
     }
 
-    const row = new ActionRowBuilder().addComponents(components);
-
-    await interaction.reply({
-      embeds: [embed],
-      components: [row],
-      ephemeral: true,
-    });
+    await interaction.reply({ embeds: [embed], ephemeral: true });
   },
   page: async (interaction, page) => {
     const row = new ActionRowBuilder();
