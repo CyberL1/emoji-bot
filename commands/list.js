@@ -6,71 +6,36 @@ import {
 } from "discord.js";
 import findEmoji from "../utils/findEmoji.js";
 
-const columnsPerPage = 1;
-const emojisPerColumn = 25;
+const emojisPerPage = 25;
 
 export default {
   run: async (interaction) => {
     const emojis = findEmoji(interaction);
-    const columns = [];
 
     const page = 1;
-    const maxPages = Math.ceil(
-      emojis.length / (columnsPerPage * emojisPerColumn),
-    );
+    const maxPages = Math.ceil(emojis.length / emojisPerPage);
 
-    for (let i = 0; i < columnsPerPage; i++) {
-      let value = "";
+    let list = "";
 
-      for (const emoji of emojis.slice(
-        emojisPerColumn * i,
-        emojisPerColumn * (i + 1),
-      )) {
-        const emojiStr =
-          (emoji.animated
-            ? `<a:${emoji.name}:${emoji.id}>`
-            : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
+    for (const emoji of emojis.slice(0, emojisPerPage)) {
+      const emojiStr =
+        (emoji.animated
+          ? `<a:${emoji.name}:${emoji.id}>`
+          : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
 
-        const emojiLine = value + emojiStr + "\n";
-
-        if (emojiLine.length > 1024) {
-          const column = {
-            name: "‎",
-            value,
-            inline: true,
-          };
-
-          columns.push(column);
-          value = emojiStr + "\n";
-        } else {
-          value += emojiStr + "\n";
-        }
-      }
-
-      if (value.length > 0) {
-        const column = {
-          name: "‎",
-          value,
-          inline: true,
-        };
-
-        columns.push(column);
+      if (list.length > 4096) {
+        list = emojiStr + "\n";
+      } else {
+        list += emojiStr + "\n";
       }
     }
 
     const embed = new EmbedBuilder()
       .setTitle(`Emojis - ${emojis.length}/2000`)
-      .addFields(columns)
+      .setDescription(list || ":x: No emojis")
       .setFooter({ text: `Page: ${page}/${maxPages}` });
 
-    const button = new ButtonBuilder()
-      .setLabel("Manage emojis")
-      .setStyle(ButtonStyle.Link)
-      .setURL(
-        `https://discord.com/developers/applications/${process.env.CLIENT_ID}/emojis`,
-      );
-
-    let components = [button];
+    let components = [];
 
     // Show navigation buttons only if maxPages > 1
     if (maxPages > 1) {
@@ -85,7 +50,7 @@ export default {
         .setStyle(ButtonStyle.Success)
         .setCustomId(`page-${page + 1}-${maxPages}`);
 
-      components = [previousPage, button, nextPage];
+      components = [previousPage, nextPage];
     }
 
     const row = new ActionRowBuilder().addComponents(components);
@@ -97,67 +62,62 @@ export default {
     });
   },
   page: async (interaction, page) => {
-    const row = ActionRowBuilder.from(interaction.message.components[0]);
+    const row = new ActionRowBuilder();
 
     const emojis = findEmoji(interaction);
-    const maxPages = Math.ceil(
-      emojis.length / (columnsPerPage * emojisPerColumn),
-    );
+    const maxPages = Math.ceil(emojis.length / emojisPerPage);
 
-    row.components[0]
-      .setStyle(page <= 1 ? ButtonStyle.Secondary : ButtonStyle.Success)
-      .setCustomId(`page-${page - 1}-${maxPages}`)
-      .setDisabled(page <= 1);
+    if (page <= maxPages) {
+      const previousPage = new ButtonBuilder()
+        .setLabel("Previous page")
+        .setStyle(page <= 1 ? ButtonStyle.Secondary : ButtonStyle.Success)
+        .setCustomId(`page-${page - 1}-${maxPages}`)
+        .setDisabled(page <= 1);
 
-    row.components[2]
-      .setStyle(page >= maxPages ? ButtonStyle.Secondary : ButtonStyle.Success)
-      .setCustomId(`page-${page + 1}-${maxPages}`)
-      .setDisabled(page >= maxPages);
+      const nextPage = new ButtonBuilder()
+        .setLabel("Next page")
+        .setStyle(
+          page >= maxPages ? ButtonStyle.Secondary : ButtonStyle.Success,
+        )
+        .setCustomId(`page-${page + 1}-${maxPages}`)
+        .setDisabled(page >= maxPages);
+
+      row.components = [previousPage, nextPage];
+    }
 
     const embed = EmbedBuilder.from(interaction.message.embeds[0]);
-    const columns = [];
+    let list = "";
 
-    for (let i = 0; i < columnsPerPage; i++) {
-      let value = "";
+    for (const emoji of emojis.slice(
+      (page - 1) * emojisPerPage,
+      (page - 1) * emojisPerPage + emojisPerPage,
+    )) {
+      const emojiStr =
+        (emoji.animated
+          ? `<a:${emoji.name}:${emoji.id}>`
+          : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
 
-      for (const emoji of emojis.slice(
-        (page - 1) * emojisPerColumn + i * emojisPerColumn,
-        (page - 1) * emojisPerColumn + (i + 1) * emojisPerColumn,
-      )) {
-        const emojiStr =
-          (emoji.animated
-            ? `<a:${emoji.name}:${emoji.id}>`
-            : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
-
-        const emojiLine = value + emojiStr + "\n";
-
-        if (emojiLine.length > 1024) {
-          const column = {
-            name: "‎",
-            value,
-            inline: true,
-          };
-
-          columns.push(column);
-          value = emojiStr + "\n";
-        } else {
-          value += emojiStr + "\n";
-        }
-      }
-
-      if (value.length > 0) {
-        const column = {
-          name: "‎",
-          value,
-          inline: true,
-        };
-
-        columns.push(column);
+      if (list.length > 4096) {
+        list = emojiStr + "\n";
+      } else {
+        list += emojiStr + "\n";
       }
     }
 
+    if (list.length === 0) {
+      list = `:x: Page ${page} not found`;
+
+      const goBack = new ButtonBuilder()
+        .setCustomId(`page-${maxPages}-${maxPages}`)
+        .setStyle(ButtonStyle.Success)
+        .setLabel(`Go back to page ${maxPages}`)
+        .setEmoji("◀");
+
+      row.components = [goBack];
+    }
+
     embed.setTitle(`Emojis - ${emojis.length}/2000`);
-    embed.setFields(columns);
+    embed.setDescription(list);
     embed.setFooter({ text: `Page: ${page}/${maxPages}` });
 
     await interaction.update({ embeds: [embed], components: [row] });
