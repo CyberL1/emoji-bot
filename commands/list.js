@@ -5,6 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import findEmoji from "../utils/findEmoji.js";
+import generateEmojiList from "../utils/generateEmojiList.js";
 
 const emojisPerPage = 25;
 
@@ -15,20 +16,7 @@ export default {
     const page = 1;
     const maxPages = Math.ceil(emojis.length / emojisPerPage);
 
-    let list = "";
-
-    for (const emoji of emojis.slice(0, emojisPerPage)) {
-      const emojiStr =
-        (emoji.animated
-          ? `<a:${emoji.name}:${emoji.id}>`
-          : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
-
-      if (list.length > 4096) {
-        list = emojiStr + "\n";
-      } else {
-        list += emojiStr + "\n";
-      }
-    }
+    const list = generateEmojiList(emojis, 0, emojisPerPage);
 
     const embed = new EmbedBuilder()
       .setTitle(`Emojis - ${emojis.length}/2000`)
@@ -84,23 +72,12 @@ export default {
     }
 
     const embed = EmbedBuilder.from(interaction.message.embeds[0]);
-    let list = "";
 
-    for (const emoji of emojis.slice(
+    let list = generateEmojiList(
+      emojis,
       (page - 1) * emojisPerPage,
       (page - 1) * emojisPerPage + emojisPerPage,
-    )) {
-      const emojiStr =
-        (emoji.animated
-          ? `<a:${emoji.name}:${emoji.id}>`
-          : `<:${emoji.name}:${emoji.id}>`) + `\`:${emoji.name}:\``;
-
-      if (list.length > 4096) {
-        list = emojiStr + "\n";
-      } else {
-        list += emojiStr + "\n";
-      }
-    }
+    );
 
     if (list.length === 0) {
       list = `:x: Page ${page} not found`;
