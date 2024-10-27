@@ -6,6 +6,7 @@ import {
 import { TextInputStyle } from "discord.js";
 
 export default {
+  name: "Reply",
   run: async (interaction) => {
     const textComponent = new TextInputBuilder()
       .setCustomId("content")

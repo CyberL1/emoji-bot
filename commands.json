@@ -51,7 +51,7 @@
     ]
   },
   {
-    "name": "reply-to",
+    "name": "Reply",
     "type": 3,
     "integration_types": [
       1

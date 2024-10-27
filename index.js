@@ -38,7 +38,7 @@ const commandFiles = readdirSync("commands").filter((f) => f.endsWith(".js"));
 
 for (const file of commandFiles) {
   const { default: command } = await import(`./commands/${file}`);
-  const commandName = file.split(".")[0];
+  const commandName = command.name || file.split(".")[0];
 
   console.log(`Loading "${commandName}" command`);
 
