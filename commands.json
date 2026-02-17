@@ -20,14 +20,8 @@
         "description": "The message ID to reply to"
       }
     ],
-    "integration_types": [
-      1
-    ],
-    "contexts": [
-      0,
-      1,
-      2
-    ]
+    "integration_types": [1],
+    "contexts": [0, 1, 2]
   },
   {
     "name": "info",
@@ -41,37 +35,19 @@
         "autocomplete": true
       }
     ],
-    "integration_types": [
-      1
-    ],
-    "contexts": [
-      0,
-      1,
-      2
-    ]
+    "integration_types": [1],
+    "contexts": [0, 1, 2]
   },
   {
     "name": "Reply",
     "type": 3,
-    "integration_types": [
-      1
-    ],
-    "contexts": [
-      0,
-      1,
-      2
-    ]
+    "integration_types": [1],
+    "contexts": [0, 1, 2]
   },
   {
     "name": "list",
     "description": "See your emojis",
-    "integration_types": [
-      1
-    ],
-    "contexts": [
-      0,
-      1,
-      2
-    ]
+    "integration_types": [1],
+    "contexts": [0, 1, 2]
   }
 ]

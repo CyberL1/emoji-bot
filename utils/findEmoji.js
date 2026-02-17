@@ -1,7 +1,4 @@
-export default (
-  interaction,
-  options = { id: "", name: "", filter: "" },
-) => {
+export default (interaction, options = { id: "", name: "", filter: "" }) => {
   const emojiCache = interaction.client.application.emojis.cache;
 
   if (options.filter) {
